@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/name"
+            android:id="@+id/station_name"
+            android:layout_gravity="center"
+            android:allowUndo="true"
+            android:maxLines="2"
+            android:maxLength="30"
+            android:lines="1"/>
+
+        <Button
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button"
+            android:layout_marginLeft="10dp"
+            android:foreground="@android:drawable/ic_dialog_map"
+            android:forceHasOverlappingRendering="false"
+            android:foregroundTint="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
+            android:foregroundGravity="center"
+            android:gravity="end|right"/>
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:text="Bikes:"
+                android:id="@+id/station_bikes"
+                android:layout_column="0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="null"
+                android:id="@+id/station_bikes_data"
+                android:layout_column="1"
+                android:layout_marginLeft="15dp"
+                android:layout_span="3"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:text="Return Slots:"
+                android:id="@+id/station_slots"
+                android:layout_column="0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="null"
+                android:id="@+id/station_slots_data"
+                android:layout_column="1"
+                android:layout_marginLeft="15dp"
+                android:layout_span="3"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:text="UPDATED:"
+                android:id="@+id/station_timestamp"
+                android:layout_column="0"
+                android:layout_gravity="bottom"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="null"
+                android:id="@+id/station_timestamp_data"
+                android:layout_column="1"
+                android:layout_marginLeft="15dp"
+                android:layout_gravity="bottom"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
