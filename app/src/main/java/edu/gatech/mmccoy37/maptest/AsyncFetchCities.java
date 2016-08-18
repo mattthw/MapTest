@@ -40,10 +40,6 @@ public class AsyncFetchCities extends AsyncTask<String, Void, Integer> {
         return cityMap;
     }
 
-    public void setCityMap(HashMap<Location, CityItem> cityMap) {
-        this.cityMap = cityMap;
-    }
-
 
     private HashMap<Location, CityItem> parseCities(String json) {
         HashMap<Location, CityItem> cities = new HashMap<>();
@@ -73,40 +69,6 @@ public class AsyncFetchCities extends AsyncTask<String, Void, Integer> {
         }
         return cities;
     }
-
-    private void parseStations(Location center, String json, float dist) {
-        //HashMap<Location, StationItem> stationsMap = null;
-        //get cities from API endpoint
-        //try {
-        //    JSONObject response = new JSONObject(json);
-        //    JSONObject network = response.optJSONObject("network");
-        //    JSONArray stations = network.optJSONArray("stations");
-        //
-        //    for (int i = 0; i < stations.length(); i++) {
-        //        JSONObject s = stations.getJSONObject(i);
-        //        StationItem station = new StationItem();
-        //        station.setEmptySlots(s.optInt("empty_slots"));
-        //        station.setFreeBikes(s.optInt("free_bikes"));
-        //        station.setName(s.optString("name"));
-        //        station.setID(s.optString("id"));
-        //        station.setTimestamp(s.optString("timestamp"));
-        //        station.setAddress(s.getJSONObject("extra").optString("address"));
-        //        Location loc = new Location("");
-        //        loc.setLatitude(s.optDouble("latitude"));
-        //        loc.setLongitude(s.optDouble("longitude"));
-        //        station.setLoc(loc);
-        //
-        //        //only get station info if it is close to user's location
-        //        if (loc.distanceTo(center) < dist) {
-        //            this.stationMap.put(loc, station);
-        //            Log.d("API_TAG", "added station: " + station.getName());
-        //        }
-        //    }
-        //} catch (JSONException e) {
-        //    e.printStackTrace();
-        //}
-    }
-
 
 
     @Override

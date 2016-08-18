@@ -33,11 +33,6 @@ public class AsyncFetchStations extends AsyncTask<String, Void, Integer> {
         stationMap = new HashMap<>();
     }
 
-    public HashMap<Location, StationItem> getStationMap() {
-        return stationMap;
-    }
-
-
 
     private void parseStations(String json) {
         //get cities from API endpoint
@@ -101,7 +96,6 @@ public class AsyncFetchStations extends AsyncTask<String, Void, Integer> {
     @Override
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
-        //MapsActivity.mMap.clear();
         //MapsActivity.setStationMap(stationMap);
         for (StationItem s: stationMap.values()) {
             MapsActivity.addStationToMap(s);
