@@ -186,7 +186,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //color
         float hue = BitmapDescriptorFactory.HUE_GREEN;
         double ratio = 0.0 + station.getFreeBikes() / (0.0 + station.getFreeBikes() + station.getEmptySlots());
-        if (ratio == 0) {
+        if (station.getFreeBikes() == 0) {
             hue = BitmapDescriptorFactory.HUE_RED;
         } else if (ratio <= 0.33) {
             hue = BitmapDescriptorFactory.HUE_ORANGE;
