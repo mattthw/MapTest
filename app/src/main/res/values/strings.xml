@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MapTest</string>
-    <string name="title_activity_maps">Bike Rentals for Citi bike</string>
+    <string name="title_activity_maps">Bike Finder</string>
     <string name="name">Name</string>
 </resources>

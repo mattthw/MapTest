@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 import edu.gatech.mmccoy37.maptest.pojo.CityItem;
 import edu.gatech.mmccoy37.maptest.pojo.StationItem;
@@ -35,12 +36,12 @@ import edu.gatech.mmccoy37.maptest.pojo.StationItem;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     public static GoogleMap mMap;
-    static Marker selectedMarker;
+    static Marker selectedStationMarker;
     private SupportMapFragment mapFragment;
     private Location mLocation;
     private static Activity mActivity;
     private static HashMap<Location, StationItem> stationMap;
-    private static ArrayList<Marker> stationMarkers;
+    private static Stack<Marker> STATIONS_ON_MAP;
     static final int STORAGE_PERMISSION_REQUEST = 1;
     static final int LOCATION_PERMISSION_REQUEST = 2;
     static final float DEFAULT_ZOOM_CLOSE = 13.0f;
@@ -52,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         this.mActivity = this;
-        stationMarkers = new ArrayList<>();
+        STATIONS_ON_MAP = new Stack<>();
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //get location
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -104,9 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                MapsActivity.selectedMarker = marker;
                 if (marker.getTag() instanceof CityItem) {
-
                     Log.d("API_TAG", "clicked marker: " + marker.getTitle());
                     AsyncFetchStations fetch = new AsyncFetchStations();
                     fetch.execute(((CityItem)marker.getTag()).getHref());
@@ -115,7 +114,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, DEFAULT_ZOOM_CLOSE));
                     mMap.setMinZoomPreference(DEFAULT_ZOOM_CLOSE);
                     return true;
-                } else {
+                } else if (marker.getTag() instanceof StationItem){
+                    MapsActivity.selectedStationMarker = marker;
                     mMap.getUiSettings().setMapToolbarEnabled(true);
                 }
                 return false;
@@ -134,8 +134,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public View getInfoContents(Marker marker) {
                 View v = mActivity.getLayoutInflater().inflate(R.layout.station_info_window, null);
 
-                if (marker.getTag() == null || !(marker.getTag() instanceof StationItem)) {
-                    return v;
+                if (marker.getTag() == null || marker.getTag() instanceof CityItem) {
+                    return null;
                 }
                 StationItem s = (StationItem)marker.getTag();
                 String name = s.getName();
@@ -197,7 +197,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Marker m = mMap.addMarker(marker);
         m.setTag(station);
-        stationMarkers.add(m);
+        STATIONS_ON_MAP.push(m);
 
     }
 
@@ -240,32 +240,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onBackPressed() {
+        //zoom logic
+        if (mMap != null && selectedStationMarker != null && selectedStationMarker.isInfoWindowShown()) {
+            selectedStationMarker.hideInfoWindow();
+            mMap.getUiSettings().setMapToolbarEnabled(false);
+        } else if (mMap != null && STATIONS_ON_MAP.size() > 0) {
+            //remove currently loaded markers
+            while (!STATIONS_ON_MAP.isEmpty()) {
+                Marker marker = STATIONS_ON_MAP.pop();
+                marker.remove();
+            }
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_FAR));
+            mMap.setMinZoomPreference(DEFAULT_ZOOM_FAR);
         //exit logic
-        if (doubleBackToExitPressedOnce) {
+        } else if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
-        }
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        } else {
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
-        //zoom logic
-        if (mMap != null && mMap.getCameraPosition().zoom > DEFAULT_ZOOM_FAR) {
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_FAR));
-            if (selectedMarker != null) {
-                selectedMarker.hideInfoWindow();
-            }
-            if (stationMarkers != null) {
-                for (Marker m : stationMarkers) {
-                    m.remove();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
                 }
-            }
-            mMap.setMinZoomPreference(DEFAULT_ZOOM_FAR);
+            }, 2000);
         }
     }
 }
